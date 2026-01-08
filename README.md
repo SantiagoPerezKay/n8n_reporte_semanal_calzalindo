@@ -7,7 +7,7 @@ Es una automatización simple pero funcional cuyo objetivo es **analizar reporte
 
 Al tratarse de mi **primer workflow**, la solución es **básica**, con lógica lineal y **sin optimizaciones avanzadas**, pero cumple correctamente su propósito y sirvió como punto de partida para entender la orquestación, automatización y uso de IA dentro de n8n.
 
-![Workflow WhatsApp Bot](.png)
+![Workflow WhatsApp Bot](reporte_semanal.png)
 ---
 
 ## Objetivo del workflow
