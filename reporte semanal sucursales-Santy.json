@@ -1,0 +1,221 @@
+{
+  "name": "reporte semanal sucursales-Santy",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "Reporte semanal de Supervision",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        608,
+        224
+      ],
+      "id": "a12a08d2-52f6-4b59-b788-9f2d1e8935e3",
+      "name": "Gmail",
+      "webhookId": "afcd00ad-9fbf-4830-8052-3f8329e5a8cf",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0bh8nKEKcEcpSD1y",
+          "name": "comunicacion gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente que tomara el rol de supervisor de sucursales \"TAMARA\", tu tarea es analizar profundamente los reportes de sucursales que recibes en formato JSON. \nAquí están los datos:\n{{ JSON.stringify($json.allData) }}}\n\n\nTomate tu tiempo y analiza bien y haz un resumen general de los problemas detectados y propone posibles mejoras. \nEl resultado será enviado por email.\n#dale un buen formato para el envio de mail que quede bonito.\n\nsolo deberas realizar esta evaluacion con los ultimos 7 dias para eso tienes un caMpo llamado \"FECHA\" {{ JSON.stringify($json.allData.map(row => row['FECHA'])) }}\nRecuerda que solo debes generar una unica salida y no la cantidad de items de entrada.\n\n##DIRECCIONES DE ENVIO DE MAIL##\ncalzalindoml@gmail.com\nlaboralbusquedavt@gmail.com\ntcalaianov@gmail.com\nSabina.galvan87@gmail.com \n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        384,
+        -16
+      ],
+      "id": "f8bbdbc7-fb8f-4d62-af21-c7a72c9034f4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1eEN6Eo4qVep92zZqXRkyaPt4FQmK0LjGJ64oJkYntBU/edit?usp=sharing",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 717824768,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eEN6Eo4qVep92zZqXRkyaPt4FQmK0LjGJ64oJkYntBU/edit#gid=717824768"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -64,
+        -16
+      ],
+      "id": "c1c41776-02ab-4f2f-9291-c060a386228e",
+      "name": "leer_sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xXCjgmPHDZfkl6yb",
+          "name": "mercadolibre"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 21 * * 6"
+            },
+            {
+              "daysInterval": 7,
+              "triggerAtHour": 21
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -304,
+        -16
+      ],
+      "id": "23200f98-a461-4625-825c-26eb2c8e36a3",
+      "name": "enviar cada 7 dias a las 1 pm"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        224
+      ],
+      "id": "d10abb08-aa3d-4bb3-9aa8-97f4d2e2b9e6",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "y24XiTpiUvoN6ssC",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  allData: items.map(item => item.json)\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        -16
+      ],
+      "id": "208fc6f6-3e0d-48b9-bea7-57f37154598b",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "content": "## falta agregar los 3 mails en el nodo de gmail:\nlaboralbusquedavt@gmail.com\ntcalaianov@gmail.com\nSabina.galvan87@gmail.com \nUna vez ingresada la informacion en google sheet (https://docs.google.com/spreadsheets/d/1eEN6Eo4qVep92zZqXRkyaPt4FQmK0LjGJ64oJkYntBU/edit?usp=sharing) testear con info real.",
+        "height": 180,
+        "width": 640
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "62b80828-4aac-42b7-b355-99bec69cf6ac",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "leer_sheet": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "enviar cada 7 dias a las 1 pm": {
+      "main": [
+        [
+          {
+            "node": "leer_sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e87519e9-7d20-4b61-b0c9-2bc79bcad7e3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "222127bd61432024b743b7c80fd78be3d217cd7dc9aece772cb095e64c7c94c4"
+  },
+  "id": "od8HuPphUOsTLQVm",
+  "tags": []
+}
